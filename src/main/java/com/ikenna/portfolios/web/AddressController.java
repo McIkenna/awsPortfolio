@@ -29,22 +29,4 @@ public class AddressController {
         return new ResponseEntity<Address>(address, HttpStatus.CREATED);
     }
 
-/*  @GetMapping("/{phoneNo}")
-    public ResponseEntity<?> getAddressByPhoneNumber(@PathVariable String phoneNo){
-        Address address = addressService.findAddressByPhoneNumber(phoneNo);
-        return new ResponseEntity<Address>(address, HttpStatus.OK);
-    }
-    @GetMapping("/{identifier}")
-    public ResponseEntity<?> getAddressByIdentifier(@PathVariable String identifier){
-        Address address = addressService.findAddressByIdentifier(identifier);
-        return new ResponseEntity<Address>(address, HttpStatus.OK);
-    }
-
-    @GetMapping("/{schoolName}")
-    public ResponseEntity<?> getAddressBySchoolName(@PathVariable String schoolName){
-        Address address = addressService.findAddressBySchool(schoolName);
-        return new ResponseEntity<Address>(address, HttpStatus.OK);
-    }
-
-   */
 }
