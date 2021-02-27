@@ -1,11 +1,16 @@
 package com.ikenna.portfolios.repository;
 
 import com.ikenna.portfolios.infos.Doc;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Repository
-public interface DocRepository extends JpaRepository<Doc, Integer> {
+public interface DocRepository {
 
-    public Doc findByProjectTitle(String projectTitle);
+    Doc findByDocId(String docId);
+    Doc save(MultipartFile multipartFile, Doc doc);
+    String deleteDoc(String docId);
+    String updateDoc(MultipartFile multipartFile, Doc doc);
+
+    Iterable<Doc> findAll();
 }

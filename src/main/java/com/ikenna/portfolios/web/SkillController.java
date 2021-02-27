@@ -1,52 +1,55 @@
 package com.ikenna.portfolios.web;
 
-import com.ikenna.portfolios.infos.Skills;
+import com.ikenna.portfolios.infos.Skill;
 import com.ikenna.portfolios.services.MapErrorService;
-import com.ikenna.portfolios.services.SkillsService;
+import com.ikenna.portfolios.services.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/skills")
+@SpringBootApplication
+@RequestMapping("/api/skill")
+@CrossOrigin
 public class SkillController {
 
     @Autowired
-    SkillsService skillsService;
+    private SkillService skillService;
 
     @Autowired
-    MapErrorService mapErrorService;
+    private MapErrorService mapErrorService;
 
     @PostMapping("")
-    public ResponseEntity<?> createNewInfo(@Valid @RequestBody Skills skills, BindingResult result){
+    public ResponseEntity<?> createNewInfo(@RequestParam(value = "file") MultipartFile file, Skill skill, BindingResult result){
 
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
         if(errorMap != null) return errorMap;
 
-        Skills skill1 = skillsService.saveOrUpdateSkills(skills);
-        return new ResponseEntity<Skills>(skills, HttpStatus.CREATED);
+        Skill skill1 = skillService.save(file, skill);
+        return new ResponseEntity<Skill>(skill, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{skillname}")
-    public ResponseEntity<?> getInfoPhoneNo(@PathVariable String skillname){
+    @GetMapping("/{skillId}")
+    public Skill getSkillById(@PathVariable String skillId){
 
-        Skills skills = skillsService.findBySkillName(skillname);
-        return new ResponseEntity<Skills>(skills, HttpStatus.OK);
+        return skillService.findBySkillId(skillId);
     }
 
     @GetMapping("/all")
-    public Iterable<Skills> findAllSkills(){
-        return skillsService.findAllSkills();
+    public Iterable<Skill> findAllSkill(){
+        return skillService.findAll();
     }
 
-    @DeleteMapping("/{skillname}")
-    public ResponseEntity<?> deleteSkill(@PathVariable String skillname){
-        skillsService.deleteBySkillName(skillname);
-
-        return new ResponseEntity<String>("User with ID: '" + skillname + "' was deleted", HttpStatus.OK);
+    @DeleteMapping("/{skillId}")
+    public String  deleteSkill(@PathVariable String skillId){
+        return skillService.deleteSkill(skillId);
+    }
+    @PutMapping("")
+    public String updateInfo(@RequestParam(value = "file") MultipartFile file, Skill skill){
+        return skillService.updateSkill(file, skill);
     }
 }

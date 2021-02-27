@@ -6,15 +6,17 @@ import com.ikenna.portfolios.repository.ProjectRepository;
 import com.ikenna.portfolios.services.MapErrorService;
 import com.ikenna.portfolios.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@SpringBootApplication
 @RequestMapping("/api/project")
+@CrossOrigin
 public class ProjectController {
 
     @Autowired
@@ -26,31 +28,35 @@ public class ProjectController {
     ProjectService projectService;
 
     @PostMapping("")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
+    public ResponseEntity<?> createNewProject(@RequestParam(value = "file") MultipartFile file, Project project, BindingResult result){
 
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
         if(errorMap != null) return errorMap;
 
-        Project project1 = projectService.saveOrUpdateProject(project);
+        Project project1 = projectService.save(file, project);
         return new ResponseEntity<Project>(project, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{projectIdentifier}")
-    public ResponseEntity<?> getProjectByIdentifier(@PathVariable String projectIdentifier){
+    @GetMapping("/{projectId}")
+    public ResponseEntity<?> getProjectById(@PathVariable String projectId){
 
-        Project project = projectService.findByProjectTitle(projectIdentifier);
+        Project project = projectService.findByProjectId(projectId);
         return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public Iterable<Project> findAllProject(){
-        return projectService.findAllProject();
+        return projectService.findAll();
     }
 
-    @DeleteMapping("/{projectIdentifier}")
-    public ResponseEntity<?> deleteProject(@PathVariable String projectIdentifier){
-      projectService.deleteByProjectIdentifier(projectIdentifier);
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<?> deleteProject(@PathVariable String projectId){
+      projectService.deleteProject(projectId);
+        return new ResponseEntity<String>("Project Title: '" + projectId + "' was deleted", HttpStatus.OK);
+    }
 
-        return new ResponseEntity<String>("Project Title: '" + projectIdentifier + "' was deleted", HttpStatus.OK);
+    @PutMapping("")
+    public String updateInfo(@RequestParam(value = "file") MultipartFile file, Project project){
+        return projectService.updateProject(file,project);
     }
 }

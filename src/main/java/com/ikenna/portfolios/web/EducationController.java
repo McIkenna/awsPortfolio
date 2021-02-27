@@ -1,17 +1,19 @@
 package com.ikenna.portfolios.web;
 
 import com.ikenna.portfolios.infos.Education;
-import com.ikenna.portfolios.infos.Response;
 import com.ikenna.portfolios.services.EducationService;
 import com.ikenna.portfolios.services.MapErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 @RestController
+@SpringBootApplication
 @RequestMapping("/api/education")
 @CrossOrigin
 public class EducationController {
@@ -23,43 +25,28 @@ public class EducationController {
     MapErrorService mapErrorService;
 
     @PostMapping("")
-    public Response addWorkEducation(@RequestParam MultipartFile file,
-                                     Education education){
+    public ResponseEntity<?> addWorkEducation(@RequestParam(value = "file") MultipartFile file, Education education, BindingResult result){
 
-        Education eduFile = educationService.saveOrUpdateEducation(file, education);
-        Response response = new Response();
-        if(eduFile != null) {
-            String downloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/downloadFile/")
-                    .path(eduFile.getDocName())
-                    .toUriString();
+        ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
+        if(errorMap != null) return errorMap;
 
-            response.setFileDownloadUri(downloadUri);
-            response.setFileName(eduFile.getSchoolName());
-            response.setFileType(eduFile.getDocType());
-            response.setSize(file.getSize());
-            response.setMessage("File Uploaded Successfully!");
-            return response;
-
-        }
-        response.setMessage("Sorry there was an error somewhere");
-        return response;
+        Education education1 = educationService.save(file, education);
+        return new ResponseEntity<Education>(education, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{schoolName}")
-    public ResponseEntity<?> getEducationBySchoolName(@PathVariable String schoolName){
-        Education education = educationService.findEducationBySchoolName(schoolName);
-        return new ResponseEntity<Education>(education, HttpStatus.OK);
+    @GetMapping("/{eduId}")
+    public Education getEducationBySchoolName(@PathVariable String eduId){
+        return educationService.findByEduId(eduId);
     }
 
     @GetMapping("/all")
     public Iterable<Education> getAllEducation(){
-        return educationService.findAllEducation();
+        return educationService.findAll();
     }
 
-    @DeleteMapping("/{schoolName}")
-    public ResponseEntity<?> deleteEducation(@PathVariable String schoolName){
-        educationService.deleteBySchoolName(schoolName);
-        return new ResponseEntity<String>("Education with School Name '" + schoolName + "' was deleted", HttpStatus.OK);
+    @DeleteMapping("/{eduId}")
+    public String deleteEducation(@PathVariable String eduId){
+
+        return educationService.deleteEdu(eduId);
     }
 }

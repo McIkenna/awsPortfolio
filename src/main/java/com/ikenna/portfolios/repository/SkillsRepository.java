@@ -1,14 +1,18 @@
 package com.ikenna.portfolios.repository;
 
-import com.ikenna.portfolios.infos.Skills;
-import org.springframework.data.repository.CrudRepository;
+import com.ikenna.portfolios.infos.Skill;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Repository
-public interface SkillsRepository extends CrudRepository<Skills, Long> {
+public interface SkillsRepository {
 
-    Skills findBySkillname(String skillname);
+    Skill findBySkillId(String skillId);
+    Skill save(MultipartFile multipartFile, Skill skill);
+    String deleteSkill(String skillId);
+    String updateSkill(MultipartFile multipartFile, Skill skill);
 
-    @Override
-    Iterable<Skills> findAll();
+
+    Iterable<Skill> findAll();
+
 }

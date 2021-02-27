@@ -2,14 +2,16 @@ package com.ikenna.portfolios.repository;
 
 
 import com.ikenna.portfolios.infos.Info;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 @Repository
-public interface InfoRepository extends CrudRepository<Info, Long> {
+public interface InfoRepository {
 
-    Info findByPhone(String phoneNo);
+    Info findByInfoId(String infoId);
+    Info save(MultipartFile multipartFile, Info info);
+    String deleteInfo(String infoId);
+    String updateInfo(MultipartFile multipartFile, Info info);
 
-    @Override
     Iterable<Info> findAll();
 }

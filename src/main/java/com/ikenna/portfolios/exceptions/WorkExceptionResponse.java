@@ -2,20 +2,18 @@ package com.ikenna.portfolios.exceptions;
 
 public class WorkExceptionResponse {
 
-    private String identifier;
+    private String error;
 
 
-    public WorkExceptionResponse(String identifier) {
-        this.identifier = identifier;
-
+    public WorkExceptionResponse(String error) {
+        this.error = error;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public String getError() {
+        return error;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setError(String error) {
+        this.error = error;
     }
-
 }

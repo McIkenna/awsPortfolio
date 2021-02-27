@@ -4,14 +4,15 @@ import com.ikenna.portfolios.infos.Info;
 import com.ikenna.portfolios.services.InfoService;
 import com.ikenna.portfolios.services.MapErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@SpringBootApplication
 @RequestMapping("/api/info")
 @CrossOrigin
 public class InfoController {
@@ -22,33 +23,32 @@ public class InfoController {
     private MapErrorService mapErrorService;
 
     @PostMapping("")
-    public ResponseEntity<?> createNewInfo(@Valid @RequestBody Info info, BindingResult result){
+    public ResponseEntity<?> createNewInfo(@RequestParam(value = "file") MultipartFile file, Info info, BindingResult result){
 
        ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
        if(errorMap != null) return errorMap;
 
-        Info info1 = infoService.saveOrUpdateInfo(info);
+        Info info1 = infoService.save(file, info);
         return new ResponseEntity<Info>(info, HttpStatus.CREATED);
     }
 
-
-    @GetMapping("/{phoneNo}")
-    public ResponseEntity<?> getInfoPhoneNo(@PathVariable String phoneNo){
-
-        Info info = infoService.findInfoByPhoneNumber(phoneNo);
-        return new ResponseEntity<Info>(info, HttpStatus.OK);
+    @GetMapping("/{infoId}")
+    public Info getInfoById(@PathVariable String infoId){
+        return infoService.findByInfoId(infoId);
     }
-
 
     @GetMapping("/all")
     public Iterable<Info> getAllInfos(){
-        return infoService.findAllInfos();
+        return infoService.findAll();
     }
 
-    @DeleteMapping("/{phoneNo}")
-    public ResponseEntity<?> deleteInfo(@PathVariable String phoneNo){
-        infoService.deleteInfoByPhoneNo(phoneNo);
+    @DeleteMapping("/{infoId}")
+    public String deleteInfo(@PathVariable String infoId){
+        return infoService.deleteInfo(infoId);
+    }
 
-        return new ResponseEntity<String>("User with ID: '" + phoneNo + "' was deleted", HttpStatus.OK);
+    @PutMapping("")
+    public String updateInfo(@RequestParam(value = "file") MultipartFile file, Info info){
+        return infoService.updateInfo(file, info);
     }
 }
