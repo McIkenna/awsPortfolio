@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
-@RequestMapping("/api/skill")
+@RequestMapping("")
 @CrossOrigin
 public class SkillController {
 
@@ -23,7 +24,8 @@ public class SkillController {
     @Autowired
     private MapErrorService mapErrorService;
 
-    @PostMapping("")
+    @PostMapping("/admin/skill")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createNewInfo(@RequestParam(value = "file") MultipartFile file, Skill skill, BindingResult result){
 
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
@@ -33,22 +35,25 @@ public class SkillController {
         return new ResponseEntity<Skill>(skill, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{skillId}")
+    @GetMapping("/api/skill/{skillId}")
+
     public Skill getSkillById(@PathVariable String skillId){
 
         return skillService.findBySkillId(skillId);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/skill/all")
     public Iterable<Skill> findAllSkill(){
         return skillService.findAll();
     }
 
-    @DeleteMapping("/{skillId}")
+    @DeleteMapping("/admin/skill/{skillId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String  deleteSkill(@PathVariable String skillId){
         return skillService.deleteSkill(skillId);
     }
-    @PutMapping("")
+    @PutMapping("/admin/skill")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateInfo(@RequestParam(value = "file") MultipartFile file, Skill skill){
         return skillService.updateSkill(file, skill);
     }

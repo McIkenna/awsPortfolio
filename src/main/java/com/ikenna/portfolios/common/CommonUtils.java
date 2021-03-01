@@ -12,4 +12,5 @@ public class CommonUtils {
     public static final String BUCKET_Skill = "skill-image";
     public static final String BUCKET_Work = "work-image";
     public static final String BUCKET_Doc = "doc-image-url";
+    public static final String JWT_KEY = "ifekadie";
 }

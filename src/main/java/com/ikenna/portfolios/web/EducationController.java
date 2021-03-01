@@ -25,6 +25,7 @@ public class EducationController {
     MapErrorService mapErrorService;
 
     @PostMapping("")
+
     public ResponseEntity<?> addWorkEducation(@RequestParam(value = "file") MultipartFile file, Education education, BindingResult result){
 
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
@@ -48,5 +49,10 @@ public class EducationController {
     public String deleteEducation(@PathVariable String eduId){
 
         return educationService.deleteEdu(eduId);
+    }
+
+    @PutMapping("")
+    public String updateEducation(@RequestParam(value = "file") MultipartFile file, Education education){
+        return educationService.updateEdu(file, education);
     }
 }

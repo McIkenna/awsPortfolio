@@ -6,6 +6,7 @@ import com.ikenna.portfolios.services.MapErrorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,8 @@ public class DocController {
     @Autowired
     private MapErrorService mapErrorService;
 
-    @PostMapping("")
+    @PostMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addWorkExperience(@RequestParam MultipartFile file, Doc doc, BindingResult result){
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
         if(errorMap != null) return errorMap;
@@ -40,13 +42,15 @@ public class DocController {
         return docStorageService.findAll();
     }
 
-    @DeleteMapping("/{docId}")
+    @DeleteMapping("/admin/{docId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteWork(@PathVariable String docId){
         docStorageService.deleteDoc(docId);
         return new ResponseEntity<String>("Work with company name '" + docId + "' was deleted", HttpStatus.OK);
     }
 
-    @PutMapping("")
+    @PutMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateInfo(@RequestParam(value = "file") MultipartFile file, Doc doc){
         return docStorageService.updateDoc(file,doc);
     }
