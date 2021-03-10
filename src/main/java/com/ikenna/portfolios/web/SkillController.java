@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +24,6 @@ public class SkillController {
     private MapErrorService mapErrorService;
 
     @PostMapping("/admin/skill")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createNewInfo(@RequestParam(value = "file") MultipartFile file, Skill skill, BindingResult result){
 
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
@@ -48,12 +46,10 @@ public class SkillController {
     }
 
     @DeleteMapping("/admin/skill/{skillId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String  deleteSkill(@PathVariable String skillId){
         return skillService.deleteSkill(skillId);
     }
     @PutMapping("/admin/skill")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateInfo(@RequestParam(value = "file") MultipartFile file, Skill skill){
         return skillService.updateSkill(file, skill);
     }

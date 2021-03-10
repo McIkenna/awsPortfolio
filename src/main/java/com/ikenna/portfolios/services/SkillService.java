@@ -55,7 +55,6 @@ public class SkillService implements SkillsRepository {
         catch(Exception e){
             throw new SkillException("This user '" + skill.getSkillName() + "' already exist");
         }
-
         return skill;
     }
 

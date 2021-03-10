@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
-@RequestMapping("/api/info")
+@RequestMapping("")
 @CrossOrigin
 public class InfoController {
     @Autowired
@@ -22,7 +22,7 @@ public class InfoController {
     @Autowired
     private MapErrorService mapErrorService;
 
-    @PostMapping("")
+    @PostMapping("/admin/info")
     public ResponseEntity<?> createNewInfo(@RequestParam(value = "file") MultipartFile file, Info info, BindingResult result){
 
        ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
@@ -32,22 +32,22 @@ public class InfoController {
         return new ResponseEntity<Info>(info, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{infoId}")
+    @GetMapping("/api/info/{infoId}")
     public Info getInfoById(@PathVariable String infoId){
         return infoService.findByInfoId(infoId);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/info/all")
     public Iterable<Info> getAllInfos(){
         return infoService.findAll();
     }
 
-    @DeleteMapping("/{infoId}")
+    @DeleteMapping("/admin/info/{infoId}")
     public String deleteInfo(@PathVariable String infoId){
         return infoService.deleteInfo(infoId);
     }
 
-    @PutMapping("")
+    @PutMapping("/admin/info")
     public String updateInfo(@RequestParam(value = "file") MultipartFile file, Info info){
         return infoService.updateInfo(file, info);
     }

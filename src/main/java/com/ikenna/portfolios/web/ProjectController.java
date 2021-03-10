@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
-@RequestMapping("/api/project")
+@RequestMapping("")
 @CrossOrigin
 public class ProjectController {
 
@@ -27,7 +27,7 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
-    @PostMapping("")
+    @PostMapping("/admin/project")
     public ResponseEntity<?> createNewProject(@RequestParam(value = "file") MultipartFile file, Project project, BindingResult result){
 
         ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
@@ -37,25 +37,25 @@ public class ProjectController {
         return new ResponseEntity<Project>(project, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{projectId}")
+    @GetMapping("/api/project/{projectId}")
     public ResponseEntity<?> getProjectById(@PathVariable String projectId){
 
         Project project = projectService.findByProjectId(projectId);
         return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/project/all")
     public Iterable<Project> findAllProject(){
         return projectService.findAll();
     }
 
-    @DeleteMapping("/{projectId}")
+    @DeleteMapping("/admin/project/{projectId}")
     public ResponseEntity<?> deleteProject(@PathVariable String projectId){
       projectService.deleteProject(projectId);
         return new ResponseEntity<String>("Project Title: '" + projectId + "' was deleted", HttpStatus.OK);
     }
 
-    @PutMapping("")
+    @PutMapping("/admin/project")
     public String updateInfo(@RequestParam(value = "file") MultipartFile file, Project project){
         return projectService.updateProject(file,project);
     }

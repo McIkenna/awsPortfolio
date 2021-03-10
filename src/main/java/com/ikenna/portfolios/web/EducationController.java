@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
-@RequestMapping("/api/education")
+@RequestMapping("")
 @CrossOrigin
 public class EducationController {
 
@@ -24,7 +24,7 @@ public class EducationController {
     @Autowired
     MapErrorService mapErrorService;
 
-    @PostMapping("")
+    @PostMapping("/admin/education")
 
     public ResponseEntity<?> addWorkEducation(@RequestParam(value = "file") MultipartFile file, Education education, BindingResult result){
 
@@ -35,17 +35,17 @@ public class EducationController {
         return new ResponseEntity<Education>(education, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{eduId}")
+    @GetMapping("/api/education/{eduId}")
     public Education getEducationBySchoolName(@PathVariable String eduId){
         return educationService.findByEduId(eduId);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/education/all")
     public Iterable<Education> getAllEducation(){
         return educationService.findAll();
     }
 
-    @DeleteMapping("/{eduId}")
+    @DeleteMapping("/admin/education/{eduId}")
     public String deleteEducation(@PathVariable String eduId){
 
         return educationService.deleteEdu(eduId);

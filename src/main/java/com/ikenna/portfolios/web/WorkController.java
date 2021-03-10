@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
-@RequestMapping("/api/work")
+@RequestMapping("")
 @CrossOrigin
 public class WorkController {
 
@@ -23,7 +23,7 @@ public class WorkController {
     @Autowired
     private MapErrorService mapErrorService;
 
- @PostMapping("")
+    @PostMapping("/admin/work")
     public ResponseEntity<?> addWorkExperience(@RequestParam MultipartFile file, Work work, BindingResult result){
      ResponseEntity<?> errorMap = mapErrorService.MapErrorService(result);
      if(errorMap != null) return errorMap;
@@ -31,23 +31,23 @@ public class WorkController {
      return new ResponseEntity<Work>(work, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{workId}")
+    @GetMapping("/api/work/{workId}")
     public Work getWorkByIdentifier(@PathVariable String workId){
      return workService.findByWorkId(workId);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/work/all")
     public Iterable<Work> getAllWorks(){
      return workService.findAll();
     }
 
-    @DeleteMapping("/{workId}")
+    @DeleteMapping("/admin/work/{workId}")
     public ResponseEntity<?> deleteWork(@PathVariable String workId){
      workService.deleteWork(workId);
         return new ResponseEntity<String>("Work with company name '" + workId + "' was deleted", HttpStatus.OK);
     }
 
-    @PutMapping("")
+    @PutMapping( "/admin/work")
     public String updateWork(@RequestParam(value = "file") MultipartFile file, Work work){
         return workService.updateWork(file,work);
     }
